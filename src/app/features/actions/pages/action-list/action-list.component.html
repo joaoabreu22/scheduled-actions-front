@@ -1,0 +1,24 @@
+<div class="list-wrapper">
+  <h2>📋 Ações Agendadas</h2>
+
+  <div *ngIf="actions.length === 0" class="empty">
+    Nenhuma ação cadastrada ainda.
+  </div>
+
+  <div class="action-card" *ngFor="let action of actions">
+    <div class="card-header">
+      <h3>{{ action.title }}</h3>
+      <span [class.executed]="action.executed" [class.pending]="!action.executed">
+        {{ action.executed ? 'Executada' : 'Agendada' }}
+      </span>
+    </div>
+
+    <p class="content">{{ action.content }}</p>
+
+    <div class="card-footer">
+      <strong>Execução:</strong>
+      {{ action.executionTime | date: 'short' }}
+      <button (click)="delete(action.id!)">🗑️ Remover</button>
+    </div>
+  </div>
+</div>

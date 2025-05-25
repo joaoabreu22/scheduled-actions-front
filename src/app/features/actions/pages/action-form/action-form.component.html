@@ -1,0 +1,22 @@
+<div class="form-wrapper">
+  <h2>📅 Agendar Nova Ação</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-group">
+      <label for="title">Título</label>
+      <input id="title" type="text" formControlName="title" placeholder="Ex: Enviar notificação" />
+    </div>
+
+    <div class="form-group">
+      <label for="content">Conteúdo</label>
+      <textarea id="content" formControlName="content" placeholder="Ex: Mensagem para o cliente"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="executionTime">Data e Hora de Execução</label>
+      <input id="executionTime" type="datetime-local" formControlName="executionTime" />
+    </div>
+
+    <button type="submit" [disabled]="form.invalid">Agendar Ação</button>
+  </form>
+</div>
