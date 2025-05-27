@@ -14,6 +14,12 @@ import { ScheduledActionService } from '../../../../core/services/scheduled-acti
 })
 export class ActionListComponent implements OnInit, OnDestroy {
   actions: ScheduledAction[] = [];
+  paginatedActions: ScheduledAction[] = [];
+
+  currentPage = 1;
+  itemsPerPage = 10;
+  totalPages = 1;
+
   private subscription!: Subscription;
 
   constructor(private service: ScheduledActionService) {}
@@ -28,7 +34,6 @@ export class ActionListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Evita vazamento de memória
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -37,12 +42,35 @@ export class ActionListComponent implements OnInit, OnDestroy {
   loadActions(): void {
     this.service.getAll().subscribe((res) => {
       this.actions = res;
+      this.setupPagination();
     });
+  }
+
+  setupPagination(): void {
+    this.totalPages = Math.ceil(this.actions.length / this.itemsPerPage);
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.paginatedActions = this.actions.slice(start, end);
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.setupPagination();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.setupPagination();
+    }
   }
 
   delete(id: string): void {
     this.service.delete(id).subscribe(() => {
       this.actions = this.actions.filter((a) => a.id !== id);
+      this.setupPagination();
     });
   }
 }

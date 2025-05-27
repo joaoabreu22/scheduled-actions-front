@@ -5,5 +5,6 @@ import { ActionFormComponent } from './features/actions/pages/action-form/action
 export const routes: Routes = [
   { path: '', redirectTo: 'acoes', pathMatch: 'full' },
   { path: 'acoes', component: ActionListComponent },
-  { path: 'nova', component: ActionFormComponent }
+  { path: 'nova', component: ActionFormComponent },
+  { path: 'editar/:id', component: ActionFormComponent }
 ];

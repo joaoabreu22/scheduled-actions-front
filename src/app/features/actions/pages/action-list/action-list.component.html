@@ -1,27 +1,46 @@
 <div class="list-wrapper">
   <h2>📋 Ações Agendadas</h2>
 
-  <div *ngIf="actions.length === 0" class="empty">
+  <div *ngIf="paginatedActions.length === 0" class="empty">
     Nenhuma ação cadastrada ainda.
   </div>
 
-  <div class="action-card" *ngFor="let action of actions">
-    <div class="card-header">
-      <h3>{{ action.title }}</h3>
-      <span [class.executed]="action.executed" [class.pending]="!action.executed">
-        {{ action.executed ? 'Executada' : 'Agendada' }}
-      </span>
-    </div>
+  <div class="table-wrapper" *ngIf="paginatedActions.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Conteúdo</th>
+          <th>Execução</th>
+          <th>Status</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let action of paginatedActions">
+          <td>{{ action.title }}</td>
+          <td>{{ action.content }}</td>
+          <td>{{ action.executionTime | date: 'dd/MM/yyyy - HH:mm' }}</td>
+          <td>
+            <span [class.executed]="action.executed" [class.pending]="!action.executed">
+              {{ action.executed ? 'Executada' : 'Agendada' }}
+            </span>
+          </td>
+          <td>
+            <button *ngIf="!action.executed" [routerLink]="['/editar', action.id]">✏️</button>
+            <button (click)="delete(action.id!)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-    <p class="content">{{ action.content }}</p>
-
-    <div class="card-footer">
-      <strong>Execução:</strong>
-      {{ action.executionTime | date: 'short' }}
-      <button (click)="delete(action.id!)">🗑️ Remover</button>
-    </div>
+  <!-- Paginação -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">«</button>
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">»</button>
   </div>
 
   <a class="new-action-btn" routerLink="/nova">➕ Nova Ação</a>
-
 </div>
